@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <netinet/in.h>
 
-#include <libnfnetlink_log/libnfnetlink_log.h>
+#include <libnetfilter_log/libnetfilter_log.h>
 
 static int print_pkt(struct nfattr *tb[])
 {

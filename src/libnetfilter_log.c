@@ -26,7 +26,7 @@
 #include <netinet/in.h>
 #include <sys/socket.h>
 #include <libnfnetlink/libnfnetlink.h>
-#include <libnfnetlink_log/libnfnetlink_log.h>
+#include <libnetfilter_log/libnetfilter_log.h>
 
 struct nfulnl_handle
 {

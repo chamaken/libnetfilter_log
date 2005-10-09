@@ -6,10 +6,10 @@ INCLUDES = $(all_includes) -I$(top_srcdir)/include -I${KERNELDIR}
 AM_CFLAGS=-fPIC -Wall
 LIBS=
 
-lib_LTLIBRARIES = libnfnetlink_log.la libnfnetlink_log_libipulog.la
+lib_LTLIBRARIES = libnetfilter_log.la libnetfilter_log_libipulog.la
 
-libnfnetlink_log_la_LDFLAGS = -Wc,-nostartfiles
-libnfnetlink_log_la_SOURCES = libnfnetlink_log.c 
+libnetfilter_log_la_LDFLAGS = -Wc,-nostartfiles
+libnetfilter_log_la_SOURCES = libnetfilter_log.c 
 
-libnfnetlink_log_libipulog_la_LDFLAGS = -Wc,-nostartfiles
-libnfnetlink_log_libipulog_la_SOURCES = libipulog_compat.c
+libnetfilter_log_libipulog_la_LDFLAGS = -Wc,-nostartfiles
+libnetfilter_log_libipulog_la_SOURCES = libipulog_compat.c

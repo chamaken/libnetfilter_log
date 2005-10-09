@@ -1,4 +1,4 @@
-/* libnfnetlink_log.h: Header file for the Netfilter Userspace Log library.
+/* libnetfilter_log.h: Header file for the Netfilter Userspace Log library.
  *
  * (C) 2005 by Harald Welte <laforge@gnumonks.org>
  *
@@ -6,8 +6,8 @@
  * of the GNU General Public License, incorporated herein by reference.
  */
 
-#ifndef __LIBNFNETLINK_LOG_H
-#define __LIBNFNETLINK_LOG_H
+#ifndef __LIBNETFILTER_LOG_H
+#define __LIBNETFILTER_LOG_H
 
 #include <libnfnetlink/libnfnetlink.h>
 #include <linux/netfilter/nfnetlink_log.h>
@@ -44,4 +44,4 @@ extern int nfulnl_callback_register(struct nfulnl_g_handle *gh,
 				    nfulnl_callback *cb, void *data);
 extern int nfulnl_handle_packet(struct nfulnl_handle *h, char *buf, int len);
 
-#endif	/* __LIBNFNETLINK_LOG_H */
+#endif	/* __LIBNETFILTER_LOG_H */

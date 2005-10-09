@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <libnfnetlink_log/libipulog.h>
+#include <libnetfilter_log/libipulog.h>
 
 #define MYBUFSIZ 2048
 

@@ -1,3 +1,3 @@
 
-SUBDIRS = libnfnetlink_log
+SUBDIRS = libnetfilter_log
 

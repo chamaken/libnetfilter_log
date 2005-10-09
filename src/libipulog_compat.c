@@ -6,8 +6,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <libnfnetlink/libnfnetlink.h>
-#include <libnfnetlink_log/libnfnetlink_log.h>
-#include <libnfnetlink_log/libipulog.h>
+#include <libnetfilter_log/libnetfilter_log.h>
+#include <libnetfilter_log/libipulog.h>
 
 /* private */
 #define PAYLOAD_SIZE	0xffff
