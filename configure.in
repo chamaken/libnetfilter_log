@@ -4,7 +4,7 @@ AC_INIT
 
 AC_CANONICAL_SYSTEM
 
-AM_INIT_AUTOMAKE(libnfnetlink_log, 0.0.10)
+AM_INIT_AUTOMAKE(libnetfilter_log, 0.0.10)
 
 AC_PROG_CC
 AM_PROG_LIBTOOL
@@ -63,5 +63,5 @@ dnl--------------------------------
 
 
 dnl Output the makefile
-AC_OUTPUT(Makefile src/Makefile include/Makefile include/libnfnetlink_log/Makefile utils/Makefile)
+AC_OUTPUT(Makefile src/Makefile include/Makefile include/libnetfilter_log/Makefile utils/Makefile)
 
