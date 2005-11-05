@@ -63,7 +63,6 @@ int main(int argc, char **argv)
 	struct nflog_handle *h;
 	struct nflog_g_handle *qh;
 	struct nflog_g_handle *qh100;
-	struct nfnl_handle *nh;
 	int rv, fd;
 	char buf[4096];
 
@@ -104,8 +103,7 @@ int main(int argc, char **argv)
 		exit(1);
 	}
 
-	nh = nflog_nfnlh(h);
-	fd = nfnl_fd(nh);
+	fd = nflog_fd(h);
 
 	printf("registering callback for group 0\n");
 	nflog_callback_register(qh, &cb, NULL);
@@ -115,25 +113,8 @@ int main(int argc, char **argv)
 		struct nlmsghdr *nlh;
 		printf("pkt received (len=%u)\n", rv);
 
-#if 0
-		for (nlh = nfnl_get_msg_first(nh, buf, rv);
-		     nlh; nlh = nfnl_get_msg_next(nh, buf, rv)) {
-			struct nfattr *tb[NFULA_MAX];
-			struct nfgenmsg *nfmsg;
-
-			printf("msg received: ");
-			nfnl_parse_hdr(nh, nlh, &nfmsg);
-			rv = nfnl_parse_attr(tb, NFULA_MAX, NFM_NFA(NLMSG_DATA(nlh)), nlh->nlmsg_len-NLMSG_ALIGN(sizeof(struct nfgenmsg)));
-			if (rv < 0) {
-				printf("error during parse: %d\n", rv);
-				break;
-			}
-			print_pkt(tb);
-		}
-#else
 		/* handle messages in just-received packet */
 		nflog_handle_packet(h, buf, rv);
-#endif
 	}
 
 	printf("unbinding from group 100\n");
