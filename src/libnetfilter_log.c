@@ -28,31 +28,31 @@
 #include <libnfnetlink/libnfnetlink.h>
 #include <libnetfilter_log/libnetfilter_log.h>
 
-struct nfulnl_handle
+struct nflog_handle
 {
 	struct nfnl_handle nfnlh;
-	struct nfulnl_g_handle *gh_list;
+	struct nflog_g_handle *gh_list;
 };
 
-struct nfulnl_g_handle
+struct nflog_g_handle
 {
-	struct nfulnl_g_handle *next;
-	struct nfulnl_handle *h;
+	struct nflog_g_handle *next;
+	struct nflog_handle *h;
 	u_int16_t id;
 
-	nfulnl_callback *cb;
+	nflog_callback *cb;
 	void *data;
 };
 
-int nfulnl_errno;
+int nflog_errno;
 
 /***********************************************************************
  * low level stuff 
  ***********************************************************************/
 
-static void del_gh(struct nfulnl_g_handle *gh)
+static void del_gh(struct nflog_g_handle *gh)
 {
-	struct nfulnl_g_handle *cur_gh, *prev_gh = NULL;
+	struct nflog_g_handle *cur_gh, *prev_gh = NULL;
 
 	for (cur_gh = gh->h->gh_list; cur_gh; cur_gh = cur_gh->next) {
 		if (cur_gh == gh) {
@@ -66,15 +66,15 @@ static void del_gh(struct nfulnl_g_handle *gh)
 	}
 }
 
-static void add_gh(struct nfulnl_g_handle *gh)
+static void add_gh(struct nflog_g_handle *gh)
 {
 	gh->next = gh->h->gh_list;
 	gh->h->gh_list = gh;
 }
 
-static struct nfulnl_g_handle *find_gh(struct nfulnl_handle *h, u_int16_t group)
+static struct nflog_g_handle *find_gh(struct nflog_handle *h, u_int16_t group)
 {
-	struct nfulnl_g_handle *gh;
+	struct nflog_g_handle *gh;
 
 	for (gh = h->gh_list; gh; gh = gh->next) {
 		if (gh->id == group)
@@ -83,10 +83,10 @@ static struct nfulnl_g_handle *find_gh(struct nfulnl_handle *h, u_int16_t group)
 	return NULL;
 }
 
-static int __nfulnl_rcv_cmd(struct nlmsghdr *nlh, struct nfattr *nfa[],
+static int __nflog_rcv_cmd(struct nlmsghdr *nlh, struct nfattr *nfa[],
 			    void *data)
 {
-	struct nfulnl_handle *h = data;
+	struct nflog_handle *h = data;
 
 	/* FIXME: implement this */
 	return 0;
@@ -94,7 +94,7 @@ static int __nfulnl_rcv_cmd(struct nlmsghdr *nlh, struct nfattr *nfa[],
 
 /* build a NFULNL_MSG_CONFIG message */
 static int
-__build_send_cfg_msg(struct nfulnl_handle *h, u_int8_t command,
+__build_send_cfg_msg(struct nflog_handle *h, u_int8_t command,
 		     u_int16_t queuenum, u_int8_t pf)
 {
 	char buf[NFNL_HEADER_LEN
@@ -111,13 +111,13 @@ __build_send_cfg_msg(struct nfulnl_handle *h, u_int8_t command,
 	return nfnl_talk(&h->nfnlh, nmh, 0, 0, NULL, NULL, NULL);
 }
 
-static int __nfulnl_rcv_pkt(struct nlmsghdr *nlh, struct nfattr *nfa[],
+static int __nflog_rcv_pkt(struct nlmsghdr *nlh, struct nfattr *nfa[],
 			    void *data)
 {
 	struct nfgenmsg *nfmsg = NLMSG_DATA(nlh);
-	struct nfulnl_handle *h = data;
+	struct nflog_handle *h = data;
 	u_int16_t group = ntohs(nfmsg->res_id);
-	struct nfulnl_g_handle *gh = find_gh(h, group);
+	struct nflog_g_handle *gh = find_gh(h, group);
 
 	if (!gh)
 		return -ENODEV;
@@ -129,30 +129,30 @@ static int __nfulnl_rcv_pkt(struct nlmsghdr *nlh, struct nfattr *nfa[],
 }
 
 static struct nfnl_callback cmd_cb = {
-	.call 		= &__nfulnl_rcv_cmd,
+	.call 		= &__nflog_rcv_cmd,
 	.attr_count 	= NFULA_CFG_MAX,
 };
 
 static struct nfnl_callback pkt_cb = {
-	.call 		= &__nfulnl_rcv_pkt,
+	.call 		= &__nflog_rcv_pkt,
 	.attr_count 	= NFULA_MAX,
 };
 
 /* public interface */
 
-struct nfnl_handle *nfulnl_nfnlh(struct nfulnl_handle *h)
+struct nfnl_handle *nflog_nfnlh(struct nflog_handle *h)
 {
 	return &h->nfnlh;
 }
 
-int nfulnl_fd(struct nfulnl_handle *h)
+int nflog_fd(struct nflog_handle *h)
 {
-	return nfnl_fd(nfulnl_nfnlh(h));
+	return nfnl_fd(nflog_nfnlh(h));
 }
 
-struct nfulnl_handle *nfulnl_open(void)
+struct nflog_handle *nflog_open(void)
 {
-	struct nfulnl_handle *h;
+	struct nflog_handle *h;
 	int err;
 
 	h = malloc(sizeof(*h));
@@ -163,20 +163,20 @@ struct nfulnl_handle *nfulnl_open(void)
 
 	err = nfnl_open(&h->nfnlh, NFNL_SUBSYS_ULOG, NFULNL_MSG_MAX, 0);
 	if (err < 0) {
-		nfulnl_errno = err;
+		nflog_errno = err;
 		goto out_free;
 	}
 
 	cmd_cb.data = h;
 	err = nfnl_callback_register(&h->nfnlh, NFULNL_MSG_CONFIG, &cmd_cb);
 	if (err < 0) {
-		nfulnl_errno = err;
+		nflog_errno = err;
 		goto out_close;
 	}
 	pkt_cb.data = h;
 	err = nfnl_callback_register(&h->nfnlh, NFULNL_MSG_PACKET, &pkt_cb);
 	if (err < 0) {
-		nfulnl_errno = err;
+		nflog_errno = err;
 		goto out_close;
 	}
 
@@ -188,7 +188,7 @@ out_free:
 	return NULL;
 }
 
-int nfulnl_callback_register(struct nfulnl_g_handle *gh, nfulnl_callback *cb,
+int nflog_callback_register(struct nflog_g_handle *gh, nflog_callback *cb,
 			     void *data)
 {
 	gh->data = data;
@@ -197,33 +197,33 @@ int nfulnl_callback_register(struct nfulnl_g_handle *gh, nfulnl_callback *cb,
 	return 0;
 }
 
-int nfulnl_handle_packet(struct nfulnl_handle *h, char *buf, int len)
+int nflog_handle_packet(struct nflog_handle *h, char *buf, int len)
 {
 	return nfnl_handle_packet(&h->nfnlh, buf, len);
 }
 
-int nfulnl_close(struct nfulnl_handle *h)
+int nflog_close(struct nflog_handle *h)
 {
 	return nfnl_close(&h->nfnlh);
 }
 
 /* bind nf_queue from a specific protocol family */
-int nfulnl_bind_pf(struct nfulnl_handle *h, u_int16_t pf)
+int nflog_bind_pf(struct nflog_handle *h, u_int16_t pf)
 {
 	return __build_send_cfg_msg(h, NFULNL_CFG_CMD_PF_BIND, 0, pf);
 }
 
 /* unbind nf_queue from a specific protocol family */
-int nfulnl_unbind_pf(struct nfulnl_handle *h, u_int16_t pf)
+int nflog_unbind_pf(struct nflog_handle *h, u_int16_t pf)
 {
 	return __build_send_cfg_msg(h, NFULNL_CFG_CMD_PF_UNBIND, 0, pf);
 }
 
 /* bind this socket to a specific queue number */
-struct nfulnl_g_handle *
-nfulnl_bind_group(struct nfulnl_handle *h, u_int16_t num)
+struct nflog_g_handle *
+nflog_bind_group(struct nflog_handle *h, u_int16_t num)
 {
-	struct nfulnl_g_handle *gh;
+	struct nflog_g_handle *gh;
 	
 	if (find_gh(h, num))
 		return NULL;
@@ -246,7 +246,7 @@ nfulnl_bind_group(struct nfulnl_handle *h, u_int16_t num)
 }
 
 /* unbind this socket from a specific queue number */
-int nfulnl_unbind_group(struct nfulnl_g_handle *gh)
+int nflog_unbind_group(struct nflog_g_handle *gh)
 {
 	int ret = __build_send_cfg_msg(gh->h, NFULNL_CFG_CMD_UNBIND, gh->id, 0);
 	if (ret == 0) {
@@ -257,7 +257,7 @@ int nfulnl_unbind_group(struct nfulnl_g_handle *gh)
 	return ret;
 }
 
-int nfulnl_set_mode(struct nfulnl_g_handle *gh,
+int nflog_set_mode(struct nflog_g_handle *gh,
 		   u_int8_t mode, u_int32_t range)
 {
 	char buf[NFNL_HEADER_LEN
@@ -276,7 +276,7 @@ int nfulnl_set_mode(struct nfulnl_g_handle *gh,
 	return nfnl_talk(&gh->h->nfnlh, nmh, 0, 0, NULL, NULL, NULL);
 }
 
-int nfulnl_set_timeout(struct nfulnl_g_handle *gh, u_int32_t timeout)
+int nflog_set_timeout(struct nflog_g_handle *gh, u_int32_t timeout)
 {
 	char buf[NFNL_HEADER_LEN+NFA_LENGTH(sizeof(u_int32_t))];
 	struct nlmsghdr *nmh = (struct nlmsghdr *) buf;
@@ -289,7 +289,7 @@ int nfulnl_set_timeout(struct nfulnl_g_handle *gh, u_int32_t timeout)
 	return nfnl_talk(&gh->h->nfnlh, nmh, 0, 0, NULL, NULL, NULL);
 }
 
-int nfulnl_set_qthresh(struct nfulnl_g_handle *gh, u_int32_t qthresh)
+int nflog_set_qthresh(struct nflog_g_handle *gh, u_int32_t qthresh)
 {
 	char buf[NFNL_HEADER_LEN+NFA_LENGTH(sizeof(u_int32_t))];
 	struct nlmsghdr *nmh = (struct nlmsghdr *) buf;
@@ -302,7 +302,7 @@ int nfulnl_set_qthresh(struct nfulnl_g_handle *gh, u_int32_t qthresh)
 	return nfnl_talk(&gh->h->nfnlh, nmh, 0, 0, NULL, NULL, NULL);
 }
 
-int nfulnl_set_nlbufsiz(struct nfulnl_g_handle *gh, u_int32_t nlbufsiz)
+int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz)
 {
 	char buf[NFNL_HEADER_LEN+NFA_LENGTH(sizeof(u_int32_t))];
 	struct nlmsghdr *nmh = (struct nlmsghdr *) buf;

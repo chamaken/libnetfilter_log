@@ -12,36 +12,36 @@
 #include <libnfnetlink/libnfnetlink.h>
 #include <linux/netfilter/nfnetlink_log.h>
 
-struct nfulnl_handle;
-struct nfulnl_g_handle;
+struct nflog_handle;
+struct nflog_g_handle;
 
-extern int nfulnl_errno;
+extern int nflog_errno;
 
-extern struct nfnl_handle *nfulnl_nfnlh(struct nfulnl_handle *h);
-extern int nfulnl_fd(struct nfulnl_handle *h);
+extern struct nfnl_handle *nflog_nfnlh(struct nflog_handle *h);
+extern int nflog_fd(struct nflog_handle *h);
 
-typedef int nfulnl_callback(struct nfulnl_g_handle *gh, struct nfgenmsg *nfmsg,
+typedef int nflog_callback(struct nflog_g_handle *gh, struct nfgenmsg *nfmsg,
 			    struct nfattr *nfa[], void *data);
 
 
-extern struct nfulnl_handle *nfulnl_open(void);
-extern int nfulnl_close(struct nfulnl_handle *h);
+extern struct nflog_handle *nflog_open(void);
+extern int nflog_close(struct nflog_handle *h);
 
-extern int nfulnl_bind_pf(struct nfulnl_handle *h, u_int16_t pf);
-extern int nfulnl_unbind_pf(struct nfulnl_handle *h, u_int16_t pf);
+extern int nflog_bind_pf(struct nflog_handle *h, u_int16_t pf);
+extern int nflog_unbind_pf(struct nflog_handle *h, u_int16_t pf);
 
-extern struct nfulnl_g_handle *nfulnl_bind_group(struct nfulnl_handle *h,
+extern struct nflog_g_handle *nflog_bind_group(struct nflog_handle *h,
 						 u_int16_t num);
-extern int nfulnl_unbind_group(struct nfulnl_g_handle *gh);
+extern int nflog_unbind_group(struct nflog_g_handle *gh);
 
-extern int nfulnl_set_mode(struct nfulnl_g_handle *gh,
+extern int nflog_set_mode(struct nflog_g_handle *gh,
 			  u_int8_t mode, unsigned int len);
-extern int nfulnl_set_timeout(struct nfulnl_g_handle *gh, u_int32_t timeout);
-extern int nfulnl_set_qthresh(struct nfulnl_g_handle *gh, u_int32_t qthresh);
-extern int nfulnl_set_nlbufsiz(struct nfulnl_g_handle *gh, u_int32_t nlbufsiz);
+extern int nflog_set_timeout(struct nflog_g_handle *gh, u_int32_t timeout);
+extern int nflog_set_qthresh(struct nflog_g_handle *gh, u_int32_t qthresh);
+extern int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz);
 
-extern int nfulnl_callback_register(struct nfulnl_g_handle *gh, 
-				    nfulnl_callback *cb, void *data);
-extern int nfulnl_handle_packet(struct nfulnl_handle *h, char *buf, int len);
+extern int nflog_callback_register(struct nflog_g_handle *gh, 
+				    nflog_callback *cb, void *data);
+extern int nflog_handle_packet(struct nflog_handle *h, char *buf, int len);
 
 #endif	/* __LIBNETFILTER_LOG_H */

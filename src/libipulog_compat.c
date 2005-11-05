@@ -15,8 +15,8 @@
 
 struct ipulog_handle
 {
-	struct nfulnl_handle *nfulh;
-	struct nfulnl_g_handle *nful_gh;
+	struct nflog_handle *nfulh;
+	struct nflog_g_handle *nful_gh;
 	struct nlmsghdr *last_nlh;
 #if 0
 	int fd;
@@ -96,16 +96,16 @@ struct ipulog_handle *ipulog_create_handle(u_int32_t gmask,
 		return NULL;
 	}
 	memset(h, 0, sizeof(*h));
-	h->nfulh = nfulnl_open();
+	h->nfulh = nflog_open();
 	if (!h->nfulh)
 		goto out_free;
 	
 	/* bind_pf returns EEXIST if we are already registered */
-	rv = nfulnl_bind_pf(h->nfulh, AF_INET);
+	rv = nflog_bind_pf(h->nfulh, AF_INET);
 	if (rv < 0 && rv != -EEXIST)
 		goto out_free;
 
-	h->nful_gh = nfulnl_bind_group(h->nfulh, group);
+	h->nful_gh = nflog_bind_group(h->nfulh, group);
 	if (!h->nful_gh)
 		goto out_free;
 
@@ -119,8 +119,8 @@ out_free:
 
 void ipulog_destroy_handle(struct ipulog_handle *h)
 {
-	nfulnl_unbind_group(h->nful_gh);
-	nfulnl_close(h->nfulh);
+	nflog_unbind_group(h->nful_gh);
+	nflog_close(h->nfulh);
 	free(h);
 }
 
@@ -134,10 +134,10 @@ ulog_packet_msg_t *ipulog_get_packet(struct ipulog_handle *h,
 
 	if (!h->last_nlh) {
 		printf("first\n");
-		nlh = nfnl_get_msg_first(nfulnl_nfnlh(h->nfulh), buf, len);
+		nlh = nfnl_get_msg_first(nflog_nfnlh(h->nfulh), buf, len);
 	}else {
 next_msg:	printf("next\n");
-		nlh = nfnl_get_msg_next(nfulnl_nfnlh(h->nfulh), buf, len);
+		nlh = nfnl_get_msg_next(nflog_nfnlh(h->nfulh), buf, len);
 	}
 	h->last_nlh = nlh;
 
@@ -207,7 +207,7 @@ ssize_t ipulog_read(struct ipulog_handle *h, unsigned char *buf,
 {
 	/* 'timeout' was never implemented in the original libipulog,
 	 * so we don't bother emulating it */
-	return nfnl_recv(nfulnl_nfnlh(h->nfulh), buf, len);
+	return nfnl_recv(nflog_nfnlh(h->nfulh), buf, len);
 }
 
 /* print a human readable description of the last error to stderr */
