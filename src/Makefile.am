@@ -8,7 +8,7 @@ LIBS=
 
 lib_LTLIBRARIES = libnetfilter_log.la libnetfilter_log_libipulog.la
 
-libnetfilter_log_la_LDFLAGS = -Wc,-nostartfiles
+libnetfilter_log_la_LDFLAGS = -Wc,-nostartfiles -lnfnetlink
 libnetfilter_log_la_SOURCES = libnetfilter_log.c 
 
 libnetfilter_log_libipulog_la_LDFLAGS = -Wc,-nostartfiles
