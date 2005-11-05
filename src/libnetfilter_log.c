@@ -44,6 +44,11 @@ struct nflog_g_handle
 	void *data;
 };
 
+struct nflog_data
+{
+	struct nfattr **nfa;
+};
+
 int nflog_errno;
 
 /***********************************************************************
@@ -118,6 +123,7 @@ static int __nflog_rcv_pkt(struct nlmsghdr *nlh, struct nfattr *nfa[],
 	struct nflog_handle *h = data;
 	u_int16_t group = ntohs(nfmsg->res_id);
 	struct nflog_g_handle *gh = find_gh(h, group);
+	struct nflog_data nfldata;
 
 	if (!gh)
 		return -ENODEV;
@@ -125,7 +131,8 @@ static int __nflog_rcv_pkt(struct nlmsghdr *nlh, struct nfattr *nfa[],
 	if (!gh->cb)
 		return -ENODEV;
 
-	return gh->cb(gh, nfmsg, nfa, gh->data);
+	nfldata.nfa = nfa;
+	return gh->cb(gh, nfmsg, &nfldata, gh->data);
 }
 
 static struct nfnl_callback cmd_cb = {
@@ -321,3 +328,71 @@ int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz)
 
 	return status;
 }
+
+
+struct nfulnl_msg_packet_hdr *nflog_get_msg_packet_hdr(struct nflog_data *nfad)
+{
+	return nfnl_get_pointer_to_data(nfad->nfa, NFULA_PACKET_HDR,
+					 struct nfulnl_msg_packet_hdr);
+}
+
+u_int32_t nflog_get_nfmark(struct nflog_data *nfad)
+{
+	return ntohl(nfnl_get_data(nfad->nfa, NFULA_MARK, u_int32_t));
+}
+
+struct nfulnl_msg_packet_timestamp *nflog_get_timestamp(struct nflog_data *nfad)
+{
+	return nfnl_get_pointer_to_data(nfad->nfa, NFULA_TIMESTAMP,
+					struct nfulnl_msg_packet_timestamp);
+}
+
+u_int32_t nflog_get_indev(struct nflog_data *nfad)
+{
+	return ntohl(nfnl_get_data(nfad->nfa, NFULA_IFINDEX_INDEV, u_int32_t));
+}
+
+u_int32_t nflog_get_physindev(struct nflog_data *nfad)
+{
+	return ntohl(nfnl_get_data(nfad->nfa, NFULA_IFINDEX_PHYSINDEV, u_int32_t));
+}
+
+u_int32_t nflog_get_outdev(struct nflog_data *nfad)
+{
+	return ntohl(nfnl_get_data(nfad->nfa, NFULA_IFINDEX_OUTDEV, u_int32_t));
+}
+
+u_int32_t nflog_get_physoutdev(struct nflog_data *nfad)
+{
+	return ntohl(nfnl_get_data(nfad->nfa, NFULA_IFINDEX_PHYSOUTDEV, u_int32_t));
+}
+
+struct nfulnl_msg_packet_hw *nflog_get_packet_hw(struct nflog_data *nfad)
+{
+	return nfnl_get_pointer_to_data(nfad->nfa, NFULA_HWADDR,
+					struct nfulnl_msg_packet_hw);
+}
+
+int nflog_get_payload(struct nflog_data *nfad, char **data)
+{
+	*data = nfnl_get_pointer_to_data(nfad->nfa, NFULA_PAYLOAD, char);
+	if (*data)
+		return NFA_PAYLOAD(nfad->nfa[NFULA_PAYLOAD-1]);
+
+	return -1;
+}
+
+char *nflog_get_prefix(struct nflog_data *nfad)
+{
+	return nfnl_get_pointer_to_data(nfad->nfa, NFULA_PREFIX, char);
+}
+
+int nflog_get_uid(struct nflog_data *nfad, u_int32_t *uid)
+{
+	if (!nfnl_attr_present(nfad->nfa, NFULA_UID))
+		return -1;
+
+	*uid = ntohl(nfnl_get_data(nfad->nfa, NFULA_UID, u_int32_t));
+	return 0;
+}
+

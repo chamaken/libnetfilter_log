@@ -6,53 +6,42 @@
 
 #include <libnetfilter_log/libnetfilter_log.h>
 
-static int print_pkt(struct nfattr *tb[])
+static int print_pkt(struct nflog_data *ldata)
 {
-	if (tb[NFULA_PACKET_HDR-1]) {
-		struct nfulnl_msg_packet_hdr *ph =
-					NFA_DATA(tb[NFULA_PACKET_HDR-1]);
+	struct nfulnl_msg_packet_hdr *ph = nflog_get_msg_packet_hdr(ldata);
+	u_int32_t mark = nflog_get_nfmark(ldata);
+	u_int32_t indev = nflog_get_indev(ldata);
+	u_int32_t outdev = nflog_get_outdev(ldata);
+	char *prefix = nflog_get_prefix(ldata);
+	void *payload;
+	int payload_len = nflog_get_payload(ldata, payload);
+	
+	if (ph) {
 		printf("hw_protocol=0x%04x hook=%u ", 
 			ntohs(ph->hw_protocol), ph->hook);
 	}
 
-	if (tb[NFULA_MARK-1]) {
-		u_int32_t mark = 
-			ntohl(*(u_int32_t *)NFA_DATA(tb[NFULA_MARK-1]));
-		printf("mark=%u ", mark);
-	}
+	printf("mark=%u ", mark);
 
-	if (tb[NFULA_IFINDEX_INDEV-1]) {
-		u_int32_t ifi = ntohl(*(u_int32_t *)NFA_DATA(tb[NFULA_IFINDEX_INDEV-1]));
-		printf("indev=%u ", ifi);
-	}
-	if (tb[NFULA_IFINDEX_OUTDEV-1]) {
-		u_int32_t ifi = ntohl(*(u_int32_t *)NFA_DATA(tb[NFULA_IFINDEX_OUTDEV-1]));
-		printf("outdev=%u ", ifi);
-	}
-#if 0
-	if (tb[NFULA_IFINDEX_PHYSINDEV-1]) {
-		u_int32_t ifi = ntohl(*(u_int32_t *)NFA_DATA(tb[NFULA_IFINDEX_PHYSINDEV-1]));
-		printf("physindev=%u ", ifi);
-	}
-	if (tb[NFULA_IFINDEX_PHYSOUTDEV-1]) {
-		u_int32_t ifi = ntohl(*(u_int32_t *)NFA_DATA(tb[NFULA_IFINDEX_PHYSOUTDEV-1]));
-		printf("physoutdev=%u ", ifi);
-	}
-#endif
-	if (tb[NFULA_PREFIX-1]) {
-		char *prefix = NFA_DATA(tb[NFULA_PREFIX-1]);
+	if (indev > 0)
+		printf("indev=%u ", indev);
+
+	if (outdev > 0)
+		printf("outdev=%u ", outdev);
+
+
+	if (prefix) {
 		printf("prefix=\"%s\" ", prefix);
 	}
-	if (tb[NFULA_PAYLOAD-1]) {
-		printf("payload_len=%d ", NFA_PAYLOAD(tb[NFULA_PAYLOAD-1]));
-	}
+	if (payload_len >= 0)
+		printf("payload_len=%d ", payload_len);
 
 	fputc('\n', stdout);
 	return 0;
 }
 
 static int cb(struct nflog_g_handle *gh, struct nfgenmsg *nfmsg,
-		struct nfattr *nfa[], void *data)
+		struct nflog_data *nfa, void *data)
 {
 	print_pkt(nfa);
 }
