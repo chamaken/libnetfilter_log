@@ -48,7 +48,7 @@ extern int nflog_handle_packet(struct nflog_handle *h, char *buf, int len);
 
 extern struct nfulnl_msg_packet_hdr *nflog_get_msg_packet_hdr(struct nflog_data *nfad);
 extern u_int32_t nflog_get_nfmark(struct nflog_data *nfad);
-extern struct nfulnl_msg_packet_timestamp *nflog_get_timestamp(struct nflog_data *nfad);
+extern int nflog_get_timestamp(struct nflog_data *nfad, struct timeval *tv);
 extern u_int32_t nflog_get_indev(struct nflog_data *nfad);
 extern u_int32_t nflog_get_physindev(struct nflog_data *nfad);
 extern u_int32_t nflog_get_outdev(struct nflog_data *nfad);

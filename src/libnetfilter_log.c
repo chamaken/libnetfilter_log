@@ -341,10 +341,19 @@ u_int32_t nflog_get_nfmark(struct nflog_data *nfad)
 	return ntohl(nfnl_get_data(nfad->nfa, NFULA_MARK, u_int32_t));
 }
 
-struct nfulnl_msg_packet_timestamp *nflog_get_timestamp(struct nflog_data *nfad)
+int nflog_get_timestamp(struct nflog_data *nfad, struct timeval *tv)
 {
-	return nfnl_get_pointer_to_data(nfad->nfa, NFULA_TIMESTAMP,
+	struct nfulnl_msg_packet_timestamp *uts;
+
+	uts = nfnl_get_pointer_to_data(nfad->nfa, NFULA_TIMESTAMP,
 					struct nfulnl_msg_packet_timestamp);
+	if (!uts)
+		return -1;
+
+	tv->tv_sec = __be64_to_cpu(uts->sec);
+	tv->tv_usec = __be64_to_cpu(uts->usec);
+
+	return 0;
 }
 
 u_int32_t nflog_get_indev(struct nflog_data *nfad)
