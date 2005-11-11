@@ -9,8 +9,7 @@
 #ifndef __LIBNETFILTER_LOG_H
 #define __LIBNETFILTER_LOG_H
 
-#include <libnfnetlink/libnfnetlink.h>
-#include <linux/netfilter/nfnetlink_log.h>
+#include <libnetfilter_log/linux_nfnetlink_log.h>
 
 struct nflog_handle;
 struct nflog_g_handle;

@@ -25,6 +25,9 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+
+#include <libnetfilter_log/linux_nfnetlink_log.h>
+
 #include <libnfnetlink/libnfnetlink.h>
 #include <libnetfilter_log/libnetfilter_log.h>
 
