@@ -1,6 +1,6 @@
 INCLUDES = $(all_includes) -I$(top_srcdir)/include -I${KERNELDIR} 
 
-bin_PROGRAMS = nfulnl_test ulog_test
+noinst_PROGRAMS = nfulnl_test ulog_test
 
 nfulnl_test_SOURCES = nfulnl_test.c
 nfulnl_test_LDADD = ../src/libnetfilter_log.la
