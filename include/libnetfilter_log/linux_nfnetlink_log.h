@@ -1,16 +1,16 @@
 #ifndef _NFNETLINK_LOG_H
 #define _NFNETLINK_LOG_H
 
+#ifndef aligned_u64
+#define aligned_u64 unsigned long long __attribute__((aligned(8)))
+#endif
+
 /* This file describes the netlink messages (i.e. 'protocol packets'),
  * and not any kind of function definitions.  It is shared between kernel and
  * userspace.  Don't put kernel specific stuff in here */
 
 #include <linux/types.h>
 #include <libnfnetlink/linux_nfnetlink.h>
-
-#ifndef aligned_u64
-#define aligned_u64 unsigned long long __attribute__((aligned(8)))
-#endif
 
 enum nfulnl_msg_types {
 	NFULNL_MSG_PACKET,		/* packet from kernel to userspace */
