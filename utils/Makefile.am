@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I$(top_srcdir)/include -I${KERNELDIR} 
+INCLUDES = $(all_includes) -I$(top_srcdir)/include
 
 noinst_PROGRAMS = nfulnl_test ulog_test
 
