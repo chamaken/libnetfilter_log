@@ -7,7 +7,7 @@ include ()
     # the headers that we need from the lastest kernel version at autogen
     # stage.
 
-    INCLUDEDIR=/lib/modules/`uname -r`/build/include/linux
+    INCLUDEDIR=${KERNEL_DIR:-/lib/modules/`uname -r`/build}/include/linux
     if [ -f $INCLUDEDIR/netfilter/nfnetlink_log.h ]
     then
     	TARGET=include/libnetfilter_log/linux_nfnetlink_log.h
@@ -29,7 +29,7 @@ include ()
 	print $0
 	}' $TEMP > $TARGET
     else
-    	echo "can't find nfnetlink_log.h kernel file"
+    	echo "can't find nfnetlink_log.h kernel file in $INCLUDEDIR"
     	exit 1
     fi
 }
