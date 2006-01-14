@@ -25,6 +25,7 @@ typedef int nflog_callback(struct nflog_g_handle *gh, struct nfgenmsg *nfmsg,
 
 
 extern struct nflog_handle *nflog_open(void);
+extern struct nflog_handle *nflog_open_nfnl(struct nfnl_handle *nfnlh);
 extern int nflog_close(struct nflog_handle *h);
 
 extern int nflog_bind_pf(struct nflog_handle *h, u_int16_t pf);
