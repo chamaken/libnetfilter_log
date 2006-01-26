@@ -353,6 +353,19 @@ int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz)
 	return status;
 }
 
+int nflog_set_flags(struct nflog_g_handle *gh, u_int16_t flags)
+{
+	char buf[NFNL_HEADER_LEN+NFA_LENGTH(sizeof(u_int16_t))];
+	struct nlmsghdr *nmh = (struct nlmsghdr *) buf;
+
+	nfnl_fill_hdr(gh->h->nfnlssh, nmh, 0, AF_UNSPEC, gh->id,
+		      NFULNL_MSG_CONFIG, NLM_F_REQUEST|NLM_F_ACK);
+
+	nfnl_addattr16(nmh, sizeof(buf), NFULA_CFG_FLAGS, htons(flags));
+
+	return nfnl_talk(gh->h->nfnlh, nmh, 0, 0, NULL, NULL, NULL);
+}
+
 
 struct nfulnl_msg_packet_hdr *nflog_get_msg_packet_hdr(struct nflog_data *nfad)
 {
@@ -429,3 +442,20 @@ int nflog_get_uid(struct nflog_data *nfad, u_int32_t *uid)
 	return 0;
 }
 
+int nflog_get_seq(struct nflog_data *nfad, u_int32_t *seq)
+{
+	if (!nfnl_attr_present(nfad->nfa, NFULA_SEQ))
+		return -1;
+
+	*seq = ntohl(nfnl_get_data(nfad->nfa, NFULA_SEQ, u_int32_t));
+	return 0;
+}
+
+int nflog_get_seq_global(struct nflog_data *nfad, u_int32_t *seq)
+{
+	if (!nfnl_attr_present(nfad->nfa, NFULA_SEQ_GLOBAL))
+		return -1;
+
+	*seq = ntohl(nfnl_get_data(nfad->nfa, NFULA_SEQ_GLOBAL, u_int32_t));
+	return 0;
+}
