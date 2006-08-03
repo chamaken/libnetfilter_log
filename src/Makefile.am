@@ -3,8 +3,8 @@
 LIBVERSION=2:0:1
 
 INCLUDES = $(all_includes) -I$(top_srcdir)/include
-AM_CFLAGS=-fPIC -Wall
-LIBS=
+AM_CFLAGS = -fPIC -Wall
+LIBS = @LIBNFLOG_LIBS@
 
 lib_LTLIBRARIES = libnetfilter_log.la libnetfilter_log_libipulog.la
 
