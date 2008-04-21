@@ -58,6 +58,7 @@ extern struct nfulnl_msg_packet_hw *nflog_get_packet_hw(struct nflog_data *nfad)
 extern int nflog_get_payload(struct nflog_data *nfad, char **data);
 extern char *nflog_get_prefix(struct nflog_data *nfad);
 extern int nflog_get_uid(struct nflog_data *nfad, u_int32_t *uid);
+extern int nflog_get_gid(struct nflog_data *nfad, u_int32_t *gid);
 extern int nflog_get_seq(struct nflog_data *nfad, u_int32_t *seq);
 extern int nflog_get_seq_global(struct nflog_data *nfad, u_int32_t *seq);
 

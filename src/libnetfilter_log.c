@@ -442,6 +442,15 @@ int nflog_get_uid(struct nflog_data *nfad, u_int32_t *uid)
 	return 0;
 }
 
+int nflog_get_gid(struct nflog_data *nfad, u_int32_t *gid)
+{
+	if (!nfnl_attr_present(nfad->nfa, NFULA_GID))
+		return -1;
+
+	*gid = ntohl(nfnl_get_data(nfad->nfa, NFULA_GID, u_int32_t));
+	return 0;
+}
+
 int nflog_get_seq(struct nflog_data *nfad, u_int32_t *seq)
 {
 	if (!nfnl_attr_present(nfad->nfa, NFULA_SEQ))
