@@ -385,6 +385,22 @@ struct nfulnl_msg_packet_hdr *nflog_get_msg_packet_hdr(struct nflog_data *nfad)
 					 struct nfulnl_msg_packet_hdr);
 }
 
+
+u_int16_t nflog_get_hwtype(struct nflog_data *nfad)
+{
+	return ntohs(nfnl_get_data(nfad->nfa, NFULA_HWTYPE, u_int16_t));
+}
+
+u_int16_t nflog_get_msg_packet_hwhdrlen(struct nflog_data *nfad)
+{
+	return ntohs(nfnl_get_data(nfad->nfa, NFULA_HWLEN, u_int16_t));
+}
+
+char *nflog_get_msg_packet_hwhdr(struct nflog_data *nfad)
+{
+	return nfnl_get_pointer_to_data(nfad->nfa, NFULA_HWHEADER, char);
+}
+
 u_int32_t nflog_get_nfmark(struct nflog_data *nfad)
 {
 	return ntohl(nfnl_get_data(nfad->nfa, NFULA_MARK, u_int32_t));
