@@ -237,7 +237,9 @@ int nflog_handle_packet(struct nflog_handle *h, char *buf, int len)
 
 int nflog_close(struct nflog_handle *h)
 {
-	return nfnl_close(h->nfnlh);
+	int ret = nfnl_close(h->nfnlh);
+	free(h);
+	return ret;
 }
 
 /* bind nf_queue from a specific protocol family */
