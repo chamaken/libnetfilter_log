@@ -1,4 +1,4 @@
-/* libnfqnetlink.c: generic library for access to nf_queue
+/* libnetfilter_log.c: generic library for access to NFLOG
  *
  * (C) 2005 by Harald Welte <laforge@gnumonks.org>
  *
@@ -104,7 +104,7 @@ static int __nflog_rcv_cmd(struct nlmsghdr *nlh, struct nfattr *nfa[],
 /* build a NFULNL_MSG_CONFIG message */
 static int
 __build_send_cfg_msg(struct nflog_handle *h, u_int8_t command,
-		     u_int16_t queuenum, u_int8_t pf)
+		     u_int16_t groupnum, u_int8_t pf)
 {
 	union {
 		char buf[NFNL_HEADER_LEN
@@ -113,7 +113,7 @@ __build_send_cfg_msg(struct nflog_handle *h, u_int8_t command,
 	} u;
 	struct nfulnl_msg_config_cmd cmd;
 
-	nfnl_fill_hdr(h->nfnlssh, &u.nmh, 0, pf, queuenum,
+	nfnl_fill_hdr(h->nfnlssh, &u.nmh, 0, pf, groupnum,
 		      NFULNL_MSG_CONFIG, NLM_F_REQUEST|NLM_F_ACK);
 
 	cmd.command = command;
@@ -242,19 +242,19 @@ int nflog_close(struct nflog_handle *h)
 	return ret;
 }
 
-/* bind nf_queue from a specific protocol family */
+/* bind nf_log from a specific protocol family */
 int nflog_bind_pf(struct nflog_handle *h, u_int16_t pf)
 {
 	return __build_send_cfg_msg(h, NFULNL_CFG_CMD_PF_BIND, 0, pf);
 }
 
-/* unbind nf_queue from a specific protocol family */
+/* unbind nf_log from a specific protocol family */
 int nflog_unbind_pf(struct nflog_handle *h, u_int16_t pf)
 {
 	return __build_send_cfg_msg(h, NFULNL_CFG_CMD_PF_UNBIND, 0, pf);
 }
 
-/* bind this socket to a specific queue number */
+/* bind this socket to a specific group number */
 struct nflog_g_handle *
 nflog_bind_group(struct nflog_handle *h, u_int16_t num)
 {
@@ -280,7 +280,7 @@ nflog_bind_group(struct nflog_handle *h, u_int16_t num)
 	return gh;
 }
 
-/* unbind this socket from a specific queue number */
+/* unbind this socket from a specific group number */
 int nflog_unbind_group(struct nflog_g_handle *gh)
 {
 	int ret = __build_send_cfg_msg(gh->h, NFULNL_CFG_CMD_UNBIND, gh->id, 0);
