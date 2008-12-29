@@ -92,15 +92,6 @@ static struct nflog_g_handle *find_gh(struct nflog_handle *h, u_int16_t group)
 	return NULL;
 }
 
-static int __nflog_rcv_cmd(struct nlmsghdr *nlh, struct nfattr *nfa[],
-			    void *data)
-{
-	/* struct nflog_handle *h = data; */
-
-	/* FIXME: implement this */
-	return 0;
-}
-
 /* build a NFULNL_MSG_CONFIG message */
 static int
 __build_send_cfg_msg(struct nflog_handle *h, u_int8_t command,
@@ -141,11 +132,6 @@ static int __nflog_rcv_pkt(struct nlmsghdr *nlh, struct nfattr *nfa[],
 	return gh->cb(gh, nfmsg, &nfldata, gh->data);
 }
 
-static struct nfnl_callback cmd_cb = {
-	.call 		= &__nflog_rcv_cmd,
-	.attr_count 	= NFULA_CFG_MAX,
-};
-
 static struct nfnl_callback pkt_cb = {
 	.call 		= &__nflog_rcv_pkt,
 	.attr_count 	= NFULA_MAX,
@@ -182,12 +168,6 @@ struct nflog_handle *nflog_open_nfnl(struct nfnl_handle *nfnlh)
 		goto out_free;
 	}
 
-	cmd_cb.data = h;
-	err = nfnl_callback_register(h->nfnlssh, NFULNL_MSG_CONFIG, &cmd_cb);
-	if (err < 0) {
-		nflog_errno = err;
-		goto out_close;
-	}
 	pkt_cb.data = h;
 	err = nfnl_callback_register(h->nfnlssh, NFULNL_MSG_PACKET, &pkt_cb);
 	if (err < 0) {
