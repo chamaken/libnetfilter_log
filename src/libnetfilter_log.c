@@ -110,7 +110,7 @@ __build_send_cfg_msg(struct nflog_handle *h, u_int8_t command,
 	cmd.command = command;
 	nfnl_addattr_l(&u.nmh, sizeof(u), NFULA_CFG_CMD, &cmd, sizeof(cmd));
 
-	return nfnl_talk(h->nfnlh, &u.nmh, 0, 0, NULL, NULL, NULL);
+	return nfnl_query(h->nfnlh, &u.nmh);
 }
 
 static int __nflog_rcv_pkt(struct nlmsghdr *nlh, struct nfattr *nfa[],
@@ -193,6 +193,9 @@ struct nflog_handle *nflog_open(void)
 		/* FIXME: nflog_errno */
 		return NULL;
 	}
+
+	/* disable netlink sequence tracking by default */
+	nfnl_unset_sequence_tracking(nfnlh);
 
 	lh = nflog_open_nfnl(nfnlh);
 	if (!lh)
@@ -290,7 +293,7 @@ int nflog_set_mode(struct nflog_g_handle *gh,
 	nfnl_addattr_l(&u.nmh, sizeof(u), NFULA_CFG_MODE, &params,
 		       sizeof(params));
 
-	return nfnl_talk(gh->h->nfnlh, &u.nmh, 0, 0, NULL, NULL, NULL);
+	return nfnl_query(gh->h->nfnlh, &u.nmh);
 }
 
 int nflog_set_timeout(struct nflog_g_handle *gh, u_int32_t timeout)
@@ -305,7 +308,7 @@ int nflog_set_timeout(struct nflog_g_handle *gh, u_int32_t timeout)
 
 	nfnl_addattr32(&u.nmh, sizeof(u), NFULA_CFG_TIMEOUT, htonl(timeout));
 
-	return nfnl_talk(gh->h->nfnlh, &u.nmh, 0, 0, NULL, NULL, NULL);
+	return nfnl_query(gh->h->nfnlh, &u.nmh);
 }
 
 int nflog_set_qthresh(struct nflog_g_handle *gh, u_int32_t qthresh)
@@ -320,7 +323,7 @@ int nflog_set_qthresh(struct nflog_g_handle *gh, u_int32_t qthresh)
 
 	nfnl_addattr32(&u.nmh, sizeof(u), NFULA_CFG_QTHRESH, htonl(qthresh));
 
-	return nfnl_talk(gh->h->nfnlh, &u.nmh, 0, 0, NULL, NULL, NULL);
+	return nfnl_query(gh->h->nfnlh, &u.nmh);
 }
 
 int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz)
@@ -336,7 +339,7 @@ int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz)
 
 	nfnl_addattr32(&u.nmh, sizeof(u), NFULA_CFG_NLBUFSIZ, htonl(nlbufsiz));
 
-	status = nfnl_talk(gh->h->nfnlh, &u.nmh, 0, 0, NULL, NULL, NULL);
+	status = nfnl_query(gh->h->nfnlh, &u.nmh);
 
 	/* we try to have space for at least 10 messages in the socket buffer */
 	if (status >= 0)
@@ -357,7 +360,7 @@ int nflog_set_flags(struct nflog_g_handle *gh, u_int16_t flags)
 
 	nfnl_addattr16(&u.nmh, sizeof(u), NFULA_CFG_FLAGS, htons(flags));
 
-	return nfnl_talk(gh->h->nfnlh, &u.nmh, 0, 0, NULL, NULL, NULL);
+	return nfnl_query(gh->h->nfnlh, &u.nmh);
 }
 
 
