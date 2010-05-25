@@ -13,8 +13,8 @@ static int print_pkt(struct nflog_data *ldata)
 	u_int32_t indev = nflog_get_indev(ldata);
 	u_int32_t outdev = nflog_get_outdev(ldata);
 	char *prefix = nflog_get_prefix(ldata);
-	void *payload;
-	int payload_len = nflog_get_payload(ldata, payload);
+	char *payload;
+	int payload_len = nflog_get_payload(ldata, &payload);
 	
 	if (ph) {
 		printf("hw_protocol=0x%04x hook=%u ", 
