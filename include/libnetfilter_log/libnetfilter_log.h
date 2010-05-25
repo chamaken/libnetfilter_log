@@ -67,4 +67,17 @@ extern int nflog_get_gid(struct nflog_data *nfad, u_int32_t *gid);
 extern int nflog_get_seq(struct nflog_data *nfad, u_int32_t *seq);
 extern int nflog_get_seq_global(struct nflog_data *nfad, u_int32_t *seq);
 
+enum {
+	NFLOG_XML_PREFIX	= (1 << 0),
+	NFLOG_XML_HW		= (1 << 1),
+	NFLOG_XML_MARK		= (1 << 2),
+	NFLOG_XML_DEV		= (1 << 3),
+	NFLOG_XML_PHYSDEV	= (1 << 4),
+	NFLOG_XML_PAYLOAD	= (1 << 5),
+	NFLOG_XML_TIME		= (1 << 6),
+	NFLOG_XML_ALL		= ~0U,
+};
+
+extern int nflog_snprintf_xml(char *buf, size_t len, struct nflog_data *tb, int flags);
+
 #endif	/* __LIBNETFILTER_LOG_H */
