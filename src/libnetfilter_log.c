@@ -553,7 +553,7 @@ int nflog_snprintf_xml(char *buf, size_t rem, struct nflog_data *tb, int flags)
 	}
 
 	ph = nflog_get_msg_packet_hdr(tb);
-	if (ph) {
+	if (ph && (flags & NFLOG_XML_HW)) {
 		size = snprintf(buf + offset, rem, "<hook>%u</hook>", ph->hook);
 		SNPRINTF_FAILURE(size, rem, offset, len);
 
