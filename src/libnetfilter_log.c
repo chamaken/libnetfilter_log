@@ -561,7 +561,7 @@ int nflog_snprintf_xml(char *buf, size_t rem, struct nflog_data *tb, int flags)
 		if (hwph && (flags & NFLOG_XML_HW)) {
 			int i, hlen = ntohs(hwph->hw_addrlen);
 
-			size = snprintf(buf + offset, rem, "<hw><proto>0x%04x"
+			size = snprintf(buf + offset, rem, "<hw><proto>%04x"
 							   "</proto>",
 					ntohs(ph->hw_protocol));
 			SNPRINTF_FAILURE(size, rem, offset, len);
@@ -578,7 +578,7 @@ int nflog_snprintf_xml(char *buf, size_t rem, struct nflog_data *tb, int flags)
 			size = snprintf(buf + offset, rem, "</src></hw>");
 			SNPRINTF_FAILURE(size, rem, offset, len);
 		} else if (flags & NFLOG_XML_HW) {
-			size = snprintf(buf + offset, rem, "<hw><proto>0x%04x"
+			size = snprintf(buf + offset, rem, "<hw><proto>%04x"
 						    "</proto></hw>",
 				 ntohs(ph->hw_protocol));
 			SNPRINTF_FAILURE(size, rem, offset, len);
