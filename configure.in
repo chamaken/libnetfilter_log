@@ -3,6 +3,7 @@ dnl Process this file with autoconf to create configure.
 AC_INIT
 
 AC_CANONICAL_SYSTEM
+AC_CONFIG_MACRO_DIR([m4])
 
 AM_INIT_AUTOMAKE(libnetfilter_log, 0.0.16)
 

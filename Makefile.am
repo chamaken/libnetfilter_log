@@ -4,6 +4,8 @@ INCLUDES =$(all_includes) -I$(top_srcdir)/include
 SUBDIRS	= include src utils
 LINKOPTS = -lnfnetlink
 
+ACLOCAL_AMFLAGS = -I m4
+
 EXTRA_DIST = $(man_MANS)
 
 man_MANS = #nfnetlink_log.3 nfnetlink_log.7
