@@ -21,7 +21,7 @@
 LIBVERSION=2:0:1
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
-AM_CFLAGS = -fPIC -Wall
+AM_CFLAGS = -Wall
 LIBS = @LIBNFLOG_LIBS@
 
 lib_LTLIBRARIES = libnetfilter_log.la libnetfilter_log_libipulog.la
