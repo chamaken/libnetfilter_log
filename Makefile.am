@@ -10,7 +10,3 @@ man_MANS = #nfnetlink_log.3 nfnetlink_log.7
 
 pkgconfigdir = $(libdir)/pkgconfig
 pkgconfig_DATA = libnetfilter_log.pc
-
-$(OBJECTS): libtool
-libtool: $(LIBTOOL_DEPS)
-	$(SHELL) ./config.status --recheck
