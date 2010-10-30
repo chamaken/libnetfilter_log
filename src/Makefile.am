@@ -20,7 +20,7 @@
 #
 LIBVERSION=2:0:1
 
-INCLUDES = $(all_includes) -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include
 AM_CFLAGS = -fPIC -Wall
 LIBS = @LIBNFLOG_LIBS@
 

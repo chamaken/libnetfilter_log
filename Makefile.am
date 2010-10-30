@@ -1,4 +1,4 @@
-INCLUDES =$(all_includes) -I$(top_srcdir)/include
+AM_CPPFLAGS = -I$(top_srcdir)/include
 SUBDIRS	= include src utils
 LINKOPTS = -lnfnetlink
 
