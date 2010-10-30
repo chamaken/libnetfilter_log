@@ -21,14 +21,14 @@
 LIBVERSION=2:0:1
 
 AM_CPPFLAGS = -I$(top_srcdir)/include
-AM_CFLAGS = -Wall
-LIBS = @LIBNFLOG_LIBS@
+AM_CFLAGS = -Wall ${LIBNFNETLINK_CFLAGS}
 
 lib_LTLIBRARIES = libnetfilter_log.la libnetfilter_log_libipulog.la
 
 libnetfilter_log_la_LDFLAGS = -Wc,-nostartfiles -lnfnetlink	\
 			      -version-info $(LIBVERSION)
 libnetfilter_log_la_SOURCES = libnetfilter_log.c 
+libnetfilter_log_la_LIBADD  = ${LIBNFNETLINK_LIBS}
 
 libnetfilter_log_libipulog_la_LDFLAGS = -Wc,-nostartfiles	\
 					-version-info 1:0:0
