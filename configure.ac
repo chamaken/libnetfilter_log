@@ -24,5 +24,7 @@ dnl Dependencies
 PKG_CHECK_MODULES([LIBNFNETLINK], [libnfnetlink >= 0.0.41])
 
 dnl Output the makefile
-AC_OUTPUT(Makefile src/Makefile include/Makefile include/libnetfilter_log/Makefile utils/Makefile libnetfilter_log.pc doxygen.cfg)
-
+AC_CONFIG_FILES([Makefile src/Makefile include/Makefile
+	include/libnetfilter_log/Makefile utils/Makefile libnetfilter_log.pc
+	doxygen.cfg])
+AC_OUTPUT
