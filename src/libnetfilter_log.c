@@ -541,6 +541,10 @@ int nflog_set_qthresh(struct nflog_g_handle *gh, u_int32_t qthresh)
  * This function sets the size (in bytes) of the buffer that is used to
  * stack log messages in nflog.
  *
+ * NOTE: The use of this function is strongly discouraged. The default
+ * buffer size (which is one memory page) provides the optimum results
+ * in terms of performance. Do not use this function in your applications.
+ *
  * \return -1 in case of error and errno is explicity set.
  */
 int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz)
