@@ -8,6 +8,7 @@ AC_CONFIG_MACRO_DIR([m4])
 AM_INIT_AUTOMAKE([-Wall foreign subdir-objects dist-bzip2 1.6])
 
 AC_PROG_CC
+AC_DISABLE_STATIC
 AM_PROG_LIBTOOL
 AC_PROG_INSTALL
 AC_PROG_LN_S
@@ -23,5 +24,7 @@ dnl Dependencies
 PKG_CHECK_MODULES([LIBNFNETLINK], [libnfnetlink >= 0.0.41])
 
 dnl Output the makefile
-AC_OUTPUT(Makefile src/Makefile include/Makefile include/libnetfilter_log/Makefile utils/Makefile libnetfilter_log.pc doxygen.cfg)
-
+AC_CONFIG_FILES([Makefile src/Makefile include/Makefile
+	include/libnetfilter_log/Makefile utils/Makefile libnetfilter_log.pc
+	doxygen.cfg])
+AC_OUTPUT
