@@ -90,7 +90,7 @@ struct ipulog_handle *ipulog_create_handle(u_int32_t gmask,
 	struct ipulog_handle *h;
 	unsigned int group = gmask2group(gmask);
 
-	h = (struct ipulog_handle *) malloc(sizeof(*h)+PAYLOAD_SIZE);
+	h = malloc(sizeof(*h)+PAYLOAD_SIZE);
 	if (! h) {
 		ipulog_errno = IPULOG_ERR_HANDLE;
 		return NULL;

@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
 	}
 
 	/* allocate a receive buffer */
-	buf = (unsigned char *) malloc(MYBUFSIZ);
+	buf = malloc(MYBUFSIZ);
 	if (!buf)
 		exit(1);
 	
