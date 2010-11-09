@@ -27,10 +27,10 @@ struct ipulog_handle
 	struct ulog_packet_msg upmsg;	/* has to be last in structure */
 };
 
-struct ipulog_errmap_t 
+static const struct ipulog_errmap_t
 {
 	int errcode;
-	char *message;
+	const char *message;
 } ipulog_errmap[] = 
 {
 	{ IPULOG_ERR_NONE, "No error" },
@@ -64,7 +64,7 @@ static unsigned int gmask2group(unsigned int gmask)
 
 int ipulog_errno = IPULOG_ERR_NONE;
 
-char *ipulog_strerror(int errcode)
+const char *ipulog_strerror(int errcode)
 {
 	if (errcode < 0 || errcode > IPULOG_MAXERR)
 		errcode = IPULOG_ERR_IMPL;

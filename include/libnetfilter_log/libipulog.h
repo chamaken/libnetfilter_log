@@ -45,7 +45,7 @@ ulog_packet_msg_t *ipulog_get_packet(struct ipulog_handle *h,
 				     const unsigned char *buf,
 				     size_t len);
 
-char *ipulog_strerror(int errcode);
+const char *ipulog_strerror(int errcode);
 
 void ipulog_perror(const char *s);
 
