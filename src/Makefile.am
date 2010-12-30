@@ -22,8 +22,6 @@ LIBVERSION=2:0:1
 
 include ${top_srcdir}/Make_global.am
 
-AM_CFLAGS = -Wall ${LIBNFNETLINK_CFLAGS}
-
 lib_LTLIBRARIES = libnetfilter_log.la libnetfilter_log_libipulog.la
 
 libnetfilter_log_la_LDFLAGS = -Wc,-nostartfiles -lnfnetlink	\
