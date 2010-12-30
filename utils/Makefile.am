@@ -1,4 +1,4 @@
-AM_CPPFLAGS = -I$(top_srcdir)/include
+include ${top_srcdir}/Make_global.am
 
 check_PROGRAMS = nfulnl_test ulog_test
 
