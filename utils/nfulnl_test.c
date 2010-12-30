@@ -44,6 +44,7 @@ static int cb(struct nflog_g_handle *gh, struct nfgenmsg *nfmsg,
 		struct nflog_data *nfa, void *data)
 {
 	print_pkt(nfa);
+	return 0;
 }
 
 
@@ -99,7 +100,6 @@ int main(int argc, char **argv)
 
 	printf("going into main loop\n");
 	while ((rv = recv(fd, buf, sizeof(buf), 0)) && rv >= 0) {
-		struct nlmsghdr *nlh;
 		printf("pkt received (len=%u)\n", rv);
 
 		/* handle messages in just-received packet */
@@ -121,5 +121,5 @@ int main(int argc, char **argv)
 	printf("closing handle\n");
 	nflog_close(h);
 
-	exit(0);
+	return EXIT_SUCCESS;
 }

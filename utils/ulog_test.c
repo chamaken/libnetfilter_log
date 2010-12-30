@@ -23,7 +23,7 @@ void handle_packet(ulog_packet_msg_t *pkt)
 	unsigned char *p;
 	int i;
 	
-	printf("Hook=%u Mark=%lu len=%d ",
+	printf("Hook=%u Mark=%lu len=%zu ",
 	       pkt->hook, pkt->mark, pkt->data_len);
 	if (strlen(pkt->prefix))
 		printf("Prefix=%s ", pkt->prefix);
@@ -76,7 +76,7 @@ int main(int argc, char *argv[])
 			exit(1);
 		}
 		printf("%d bytes received\n", len);
-		while (upkt = ipulog_get_packet(h, buf, len)) {
+		while ((upkt = ipulog_get_packet(h, buf, len)) != NULL) {
 			handle_packet(upkt);
 		}
 	}
