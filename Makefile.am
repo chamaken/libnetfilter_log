@@ -1,6 +1,4 @@
-AM_CPPFLAGS = -I$(top_srcdir)/include
 SUBDIRS	= include src utils
-LINKOPTS = -lnfnetlink
 
 ACLOCAL_AMFLAGS = -I m4
 
