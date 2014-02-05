@@ -22,14 +22,18 @@ LIBVERSION=2:0:1
 
 include ${top_srcdir}/Make_global.am
 
-lib_LTLIBRARIES = libnetfilter_log.la libnetfilter_log_libipulog.la
+lib_LTLIBRARIES = libnetfilter_log.la
 
 libnetfilter_log_la_LDFLAGS = -Wc,-nostartfiles -lnfnetlink	\
 			      -version-info $(LIBVERSION)
 libnetfilter_log_la_SOURCES = libnetfilter_log.c 
 libnetfilter_log_la_LIBADD  = ${LIBNFNETLINK_LIBS}
 
+if BUILD_IPULOG
+lib_LTLIBRARIES += libnetfilter_log_libipulog.la
+
 libnetfilter_log_libipulog_la_LDFLAGS = -Wc,-nostartfiles	\
 					-version-info 1:0:0
 libnetfilter_log_libipulog_la_LIBADD = libnetfilter_log.la
 libnetfilter_log_libipulog_la_SOURCES = libipulog_compat.c
+endif

@@ -24,6 +24,11 @@ case "$host" in
 *) AC_MSG_ERROR([Linux only, dude!]);;
 esac
 
+AC_ARG_WITH([ipulog],
+  AC_HELP_STRING([--without-ipulog], [don't build libipulog compat library]),
+  [ipulog_skip=1], [ipulog_skip=0])
+AM_CONDITIONAL([BUILD_IPULOG], [test $ipulog_skip = 0])
+
 dnl Dependencies
 PKG_CHECK_MODULES([LIBNFNETLINK], [libnfnetlink >= 0.0.41])
 
