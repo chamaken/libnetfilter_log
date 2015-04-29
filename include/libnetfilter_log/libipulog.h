@@ -4,6 +4,7 @@
 #include <errno.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <sys/types.h>
 
 /* FIXME: glibc sucks */
 #ifndef MSG_TRUNC 
