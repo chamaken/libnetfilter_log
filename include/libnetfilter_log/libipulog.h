@@ -2,6 +2,7 @@
 #define _LIBIPULOG_H
 
 #include <errno.h>
+#include <stdint.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/types.h>
@@ -33,9 +34,9 @@ typedef struct ulog_packet_msg {
 struct ipulog_handle;
 extern int ipulog_errno;
 
-u_int32_t ipulog_group2gmask(u_int32_t group);
+uint32_t ipulog_group2gmask(uint32_t group);
 
-struct ipulog_handle *ipulog_create_handle(u_int32_t gmask, u_int32_t rmem);
+struct ipulog_handle *ipulog_create_handle(uint32_t gmask, uint32_t rmem);
 
 void ipulog_destroy_handle(struct ipulog_handle *h);
 

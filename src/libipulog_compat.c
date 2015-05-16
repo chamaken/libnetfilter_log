@@ -20,7 +20,7 @@ struct ipulog_handle
 	struct nlmsghdr *last_nlh;
 #if 0
 	int fd;
-	u_int8_t blocking;
+	uint8_t blocking;
 	struct sockaddr_nl local;
 	struct sockaddr_nl peer;
 #endif
@@ -72,7 +72,7 @@ const char *ipulog_strerror(int errcode)
 }
 
 /* convert a netlink group (1-32) to a group_mask suitable for create_handle */
-u_int32_t ipulog_group2gmask(u_int32_t group)
+uint32_t ipulog_group2gmask(uint32_t group)
 {
 	if (group < 1 || group > 32)
 	{
@@ -83,8 +83,8 @@ u_int32_t ipulog_group2gmask(u_int32_t group)
 }
 
 /* create a ipulog handle for the reception of packets sent to gmask */
-struct ipulog_handle *ipulog_create_handle(u_int32_t gmask, 
-					   u_int32_t rcvbufsize)
+struct ipulog_handle *ipulog_create_handle(uint32_t gmask,
+					   uint32_t rcvbufsize)
 {
 	int rv;
 	struct ipulog_handle *h;
@@ -155,7 +155,7 @@ next_msg:	printf("next\n");
 	h->upmsg.hook = hdr->hook;
 
 	if (tb[NFULA_MARK-1])
-		h->upmsg.mark = ntohl(*(u_int32_t *)NFA_DATA(tb[NFULA_MARK-1]));
+		h->upmsg.mark = ntohl(*(uint32_t *)NFA_DATA(tb[NFULA_MARK-1]));
 	else
 		h->upmsg.mark = 0;
 

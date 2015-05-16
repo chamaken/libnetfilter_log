@@ -9,6 +9,7 @@
 #ifndef __LIBNETFILTER_LOG_H
 #define __LIBNETFILTER_LOG_H
 
+#include <stdint.h>
 #include <sys/types.h>
 #include <libnetfilter_log/linux_nfnetlink_log.h>
 
@@ -29,19 +30,19 @@ extern struct nflog_handle *nflog_open(void);
 extern struct nflog_handle *nflog_open_nfnl(struct nfnl_handle *nfnlh);
 extern int nflog_close(struct nflog_handle *h);
 
-extern int nflog_bind_pf(struct nflog_handle *h, u_int16_t pf);
-extern int nflog_unbind_pf(struct nflog_handle *h, u_int16_t pf);
+extern int nflog_bind_pf(struct nflog_handle *h, uint16_t pf);
+extern int nflog_unbind_pf(struct nflog_handle *h, uint16_t pf);
 
 extern struct nflog_g_handle *nflog_bind_group(struct nflog_handle *h,
-						 u_int16_t num);
+						 uint16_t num);
 extern int nflog_unbind_group(struct nflog_g_handle *gh);
 
 extern int nflog_set_mode(struct nflog_g_handle *gh,
-			  u_int8_t mode, unsigned int len);
-extern int nflog_set_timeout(struct nflog_g_handle *gh, u_int32_t timeout);
-extern int nflog_set_flags(struct nflog_g_handle *gh, u_int16_t flags);
-extern int nflog_set_qthresh(struct nflog_g_handle *gh, u_int32_t qthresh);
-extern int nflog_set_nlbufsiz(struct nflog_g_handle *gh, u_int32_t nlbufsiz);
+			  uint8_t mode, unsigned int len);
+extern int nflog_set_timeout(struct nflog_g_handle *gh, uint32_t timeout);
+extern int nflog_set_flags(struct nflog_g_handle *gh, uint16_t flags);
+extern int nflog_set_qthresh(struct nflog_g_handle *gh, uint32_t qthresh);
+extern int nflog_set_nlbufsiz(struct nflog_g_handle *gh, uint32_t nlbufsiz);
 
 extern int nflog_callback_register(struct nflog_g_handle *gh, 
 				    nflog_callback *cb, void *data);
@@ -50,23 +51,23 @@ extern int nflog_handle_packet(struct nflog_handle *h, char *buf, int len);
 
 extern struct nfulnl_msg_packet_hdr *nflog_get_msg_packet_hdr(struct nflog_data *nfad);
 
-extern u_int16_t nflog_get_hwtype(struct nflog_data *nfad);
-extern u_int16_t nflog_get_msg_packet_hwhdrlen(struct nflog_data *nfad);
+extern uint16_t nflog_get_hwtype(struct nflog_data *nfad);
+extern uint16_t nflog_get_msg_packet_hwhdrlen(struct nflog_data *nfad);
 extern char *nflog_get_msg_packet_hwhdr(struct nflog_data *nfad);
 
-extern u_int32_t nflog_get_nfmark(struct nflog_data *nfad);
+extern uint32_t nflog_get_nfmark(struct nflog_data *nfad);
 extern int nflog_get_timestamp(struct nflog_data *nfad, struct timeval *tv);
-extern u_int32_t nflog_get_indev(struct nflog_data *nfad);
-extern u_int32_t nflog_get_physindev(struct nflog_data *nfad);
-extern u_int32_t nflog_get_outdev(struct nflog_data *nfad);
-extern u_int32_t nflog_get_physoutdev(struct nflog_data *nfad);
+extern uint32_t nflog_get_indev(struct nflog_data *nfad);
+extern uint32_t nflog_get_physindev(struct nflog_data *nfad);
+extern uint32_t nflog_get_outdev(struct nflog_data *nfad);
+extern uint32_t nflog_get_physoutdev(struct nflog_data *nfad);
 extern struct nfulnl_msg_packet_hw *nflog_get_packet_hw(struct nflog_data *nfad);
 extern int nflog_get_payload(struct nflog_data *nfad, char **data);
 extern char *nflog_get_prefix(struct nflog_data *nfad);
-extern int nflog_get_uid(struct nflog_data *nfad, u_int32_t *uid);
-extern int nflog_get_gid(struct nflog_data *nfad, u_int32_t *gid);
-extern int nflog_get_seq(struct nflog_data *nfad, u_int32_t *seq);
-extern int nflog_get_seq_global(struct nflog_data *nfad, u_int32_t *seq);
+extern int nflog_get_uid(struct nflog_data *nfad, uint32_t *uid);
+extern int nflog_get_gid(struct nflog_data *nfad, uint32_t *gid);
+extern int nflog_get_seq(struct nflog_data *nfad, uint32_t *seq);
+extern int nflog_get_seq_global(struct nflog_data *nfad, uint32_t *seq);
 
 enum {
 	NFLOG_XML_PREFIX	= (1 << 0),

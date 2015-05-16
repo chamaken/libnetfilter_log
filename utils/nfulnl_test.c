@@ -9,9 +9,9 @@
 static int print_pkt(struct nflog_data *ldata)
 {
 	struct nfulnl_msg_packet_hdr *ph = nflog_get_msg_packet_hdr(ldata);
-	u_int32_t mark = nflog_get_nfmark(ldata);
-	u_int32_t indev = nflog_get_indev(ldata);
-	u_int32_t outdev = nflog_get_outdev(ldata);
+	uint32_t mark = nflog_get_nfmark(ldata);
+	uint32_t indev = nflog_get_indev(ldata);
+	uint32_t outdev = nflog_get_outdev(ldata);
 	char *prefix = nflog_get_prefix(ldata);
 	char *payload;
 	int payload_len = nflog_get_payload(ldata, &payload);
