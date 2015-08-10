@@ -34,6 +34,6 @@ include ()
     fi
 }
 
-[ "x$1" == "xdistrib" ] && include
+[ "x$1" = "xdistrib" ] && include
 autoreconf -fi
 rm -Rf autom4te.cache
