@@ -89,4 +89,12 @@ extern int nflog_attr_put_cfg_mode(struct nlmsghdr *nlh, uint8_t mode, uint32_t 
 extern int nflog_attr_put_cfg_cmd(struct nlmsghdr *nlh, uint8_t cmd);
 extern int nflog_nlmsg_parse(const struct nlmsghdr *nlh, struct nlattr **attr);
 
+enum nflog_output_type {
+	NFLOG_OUTPUT_XML	= 0,
+};
+
+int nflog_nlmsg_snprintf(char *buf, size_t bufsiz, const struct nlmsghdr *nlh,
+			 struct nlattr **attr, enum nflog_output_type type,
+			 uint32_t flags);
+
 #endif	/* __LIBNETFILTER_LOG_H */

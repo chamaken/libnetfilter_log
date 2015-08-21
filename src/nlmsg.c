@@ -9,6 +9,9 @@
 #include <arpa/inet.h>
 #include <linux/netfilter/nfnetlink_log.h>
 #include <libmnl/libmnl.h>
+#include <libnetfilter_log/libnetfilter_log.h>
+#include <errno.h>
+#include "internal.h"
 
 /**
  * \defgroup nlmsg Netlink message helper functions
@@ -154,6 +157,56 @@ int nflog_nlmsg_parse(const struct nlmsghdr *nlh, struct nlattr **attr)
 {
 	return mnl_attr_parse(nlh, sizeof(struct nfgenmsg),
 			      nflog_parse_attr_cb, attr);
+}
+
+/**
+ * nflog_nlmsg_snprintf - print a nflog nlattrs to a buffer
+ * \param buf buffer used to build the printable nflog
+ * \param bufsiz size of the buffer
+ * \param nlh netlink message (to get queue num in the futuer)
+ * \param attr pointer to a nflog attrs
+ * \param type print message type in enum nflog_output_type
+ * \param flags The flag that tell what to print into the buffer
+ *
+ * This function supports the following type - flags:
+ *
+ *   type: NFLOG_OUTPUT_XML
+ *	- NFLOG_XML_PREFIX: include the string prefix
+ *	- NFLOG_XML_HW: include the hardware link layer address
+ *	- NFLOG_XML_MARK: include the packet mark
+ *	- NFLOG_XML_DEV: include the device information
+ *	- NFLOG_XML_PHYSDEV: include the physical device information
+ *	- NFLOG_XML_PAYLOAD: include the payload (in hexadecimal)
+ *	- NFLOG_XML_TIME: include the timestamp
+ *	- NFLOG_XML_ALL: include all the logging information (all flags set)
+ *
+ * You can combine this flags with an binary OR.
+ *
+ * this function returns -1 and errno is explicitly set in case of
+ * failure, otherwise the length of the string that would have been
+ * printed into the buffer (in case that there is enough room in
+ * it). See snprintf() return value for more information.
+ */
+int nflog_nlmsg_snprintf(char *buf, size_t bufsiz, const struct nlmsghdr *nlh,
+			 struct nlattr **attr, enum nflog_output_type type,
+			 uint32_t flags)
+{
+	/* This is a hack to re-use the existing old API code. */
+	struct nflog_data nfad = {
+		.nfa	= (struct nfattr **)&attr[1],
+	};
+	int ret;
+
+	switch (type) {
+	case NFLOG_OUTPUT_XML:
+		ret = nflog_snprintf_xml(buf, bufsiz, &nfad, flags);
+		break;
+	default:
+		ret = -1;
+		errno = EOPNOTSUPP;
+		break;
+	}
+	return ret;
 }
 
 /**

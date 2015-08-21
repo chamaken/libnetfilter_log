@@ -14,6 +14,7 @@ static int log_cb(const struct nlmsghdr *nlh, void *data)
 	struct nfulnl_msg_packet_hdr *ph = NULL;
 	const char *prefix = NULL;
 	uint32_t mark = 0;
+	char buf[4096];
 	int ret;
 
 	ret = nflog_nlmsg_parse(nlh, attrs);
@@ -30,6 +31,12 @@ static int log_cb(const struct nlmsghdr *nlh, void *data)
 	printf("log received (prefix=\"%s\" hw=0x%04x hook=%u mark=%u)\n",
 		prefix ? prefix : "", ntohs(ph->hw_protocol), ph->hook,
 		mark);
+
+	ret = nflog_nlmsg_snprintf(buf, sizeof(buf), nlh, attrs,
+				   NFLOG_OUTPUT_XML, NFLOG_XML_ALL);
+	if (ret < 0)
+		return MNL_CB_ERROR;
+	printf("%s (ret=%d)\n", buf, ret);
 
 	return MNL_CB_OK;
 }

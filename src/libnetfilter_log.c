@@ -26,6 +26,7 @@
 #include <errno.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
+#include "internal.h"
 
 #include <libnetfilter_log/linux_nfnetlink_log.h>
 
@@ -76,11 +77,6 @@ struct nflog_g_handle
 
 	nflog_callback *cb;
 	void *data;
-};
-
-struct nflog_data
-{
-	struct nfattr **nfa;
 };
 
 int nflog_errno;
