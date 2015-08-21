@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include <sys/types.h>
+#include <linux/netlink.h>
 #include <libnetfilter_log/linux_nfnetlink_log.h>
 
 struct nflog_handle;
@@ -81,5 +82,11 @@ enum {
 };
 
 extern int nflog_snprintf_xml(char *buf, size_t len, struct nflog_data *tb, int flags);
+
+extern struct nlmsghdr *
+nflog_nlmsg_put_header(char *buf, uint8_t type, uint8_t family, uint16_t qnum);
+extern int nflog_attr_put_cfg_mode(struct nlmsghdr *nlh, uint8_t mode, uint32_t range);
+extern int nflog_attr_put_cfg_cmd(struct nlmsghdr *nlh, uint8_t cmd);
+extern int nflog_nlmsg_parse(const struct nlmsghdr *nlh, struct nlattr **attr);
 
 #endif	/* __LIBNETFILTER_LOG_H */

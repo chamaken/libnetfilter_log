@@ -26,8 +26,8 @@ lib_LTLIBRARIES = libnetfilter_log.la
 
 libnetfilter_log_la_LDFLAGS = -Wc,-nostartfiles -lnfnetlink	\
 			      -version-info $(LIBVERSION)
-libnetfilter_log_la_SOURCES = libnetfilter_log.c 
-libnetfilter_log_la_LIBADD  = ${LIBNFNETLINK_LIBS}
+libnetfilter_log_la_SOURCES = libnetfilter_log.c nlmsg.c
+libnetfilter_log_la_LIBADD  = ${LIBNFNETLINK_LIBS} ${LIBMNL_LIBS}
 
 if BUILD_IPULOG
 lib_LTLIBRARIES += libnetfilter_log_libipulog.la
