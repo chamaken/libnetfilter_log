@@ -1,10 +1,14 @@
 include ${top_srcdir}/Make_global.am
 
-check_PROGRAMS = nfulnl_test
+check_PROGRAMS = nfulnl_test nf-log
 
 nfulnl_test_SOURCES = nfulnl_test.c
 nfulnl_test_LDADD = ../src/libnetfilter_log.la
 nfulnl_test_LDFLAGS = -dynamic
+
+nf_log_SOURCES = nf-log.c
+nf_log_LDADD = ../src/libnetfilter_log.la
+nf_log_LDFLAGS = -dynamic -lmnl
 
 if BUILD_IPULOG
 check_PROGRAMS += ulog_test
