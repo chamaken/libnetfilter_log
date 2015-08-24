@@ -7,7 +7,6 @@
  * (at your option) any later version.
  */
 #include <arpa/inet.h>
-#include <linux/netfilter/nfnetlink_log.h>
 #include <libmnl/libmnl.h>
 #include <libnetfilter_log/libnetfilter_log.h>
 #include <errno.h>
@@ -112,6 +111,7 @@ static int nflog_parse_attr_cb(const struct nlattr *attr, void *data)
 	case NFULA_SEQ:			/* instance-local sequence number */
 	case NFULA_SEQ_GLOBAL:		/* global sequence number */
 	case NFULA_GID:			/* group id of socket */
+	case NFULA_CT_INFO:		/* enum ip_conntrack_info */
 		if (mnl_attr_validate(attr, MNL_TYPE_U32) < 0)
 			return MNL_CB_ERROR;
 		break;
@@ -139,6 +139,7 @@ static int nflog_parse_attr_cb(const struct nlattr *attr, void *data)
 		break;
 	case NFULA_HWHEADER:		/* hardware header */
 	case NFULA_PAYLOAD:		/* opaque data payload */
+	case NFULA_CT:			/* nf_conntrack_netlink.h */
 		break;
 	}
 	tb[type] = attr;
