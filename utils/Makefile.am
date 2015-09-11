@@ -9,6 +9,10 @@ nfulnl_test_LDFLAGS = -dynamic
 nf_log_SOURCES = nf-log.c
 nf_log_LDADD = ../src/libnetfilter_log.la
 nf_log_LDFLAGS = -dynamic -lmnl
+if BUILD_NFCT
+nf_log_LDFLAGS += $(LIBNETFILTER_CONNTRACK_LIBS)
+nf_log_CFLAGS = -DBUILD_NFCT
+endif
 
 if BUILD_IPULOG
 check_PROGRAMS += ulog_test
